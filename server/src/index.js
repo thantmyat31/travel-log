@@ -4,9 +4,10 @@ const helmet = require('helmet');
 const cors = require('cors');
 const middlewares = require('./middlewares');
 const mongoose = require('mongoose');
+require('dotenv').config();
+
 const logs = require('./api/logs');
 
-require('dotenv').config();
 
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
@@ -26,7 +27,7 @@ const PORT = process.env.PORT || 1337;
 
 app.get('/', (req, res) => {
     res.json({
-        message: 'I am getting'
+        message: 'Server is running'
     });
 });
 

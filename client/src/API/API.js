@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:1337';
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:1337' : 'https://travel-log-server-tms.herokuapp.com';
 
 export const getLogEntries = async () => {
     const response = await fetch(`${API_URL}/api/logs`);
@@ -6,12 +6,22 @@ export const getLogEntries = async () => {
 }
 
 export const createLogEntry = async (entry) => {
+    const apiKey = entry.apiKey;
+    delete entry.apiKey;
+
     const response = await fetch(`${API_URL}/api/logs`, {
         method: "POST",
         headers: {
-            "content-type": "application/json"
+            "content-type": "application/json",
+            "X-API-KEY": apiKey
         },
         body: JSON.stringify(entry)
     });
-    return response.json();
+    const json = await response.json();
+    if(response.ok) {
+        return json;
+    }
+    const error = new Error(json.message);
+    error.response = json;
+    throw error;
 }
